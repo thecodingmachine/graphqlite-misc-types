@@ -14,7 +14,7 @@ jobs:
           "./vendor/bin/phpunit"
         - composer phpstan
       after_script:
-        - ./vendor/bin/coveralls -v
+        - ./vendor/bin/php-coveralls -v
     - php: 7.2
       env: PREFER_LOWEST=""
       before_script:
