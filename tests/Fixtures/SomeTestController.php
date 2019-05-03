@@ -17,4 +17,12 @@ class SomeTestController
     {
         return $scalar;
     }
+
+    /**
+     * @Query()
+     */
+    public function testIgnore(string $foo): string
+    {
+        return $foo;
+    }
 }

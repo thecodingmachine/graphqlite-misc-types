@@ -9,8 +9,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Simple\ArrayCache;
 use TheCodingMachine\GraphQLite\Containers\BasicAutoWiringContainer;
 use TheCodingMachine\GraphQLite\Containers\EmptyContainer;
+use TheCodingMachine\GraphQLite\Mappers\StaticTypeMapper;
 use TheCodingMachine\GraphQLite\Schema;
 use TheCodingMachine\GraphQLite\SchemaFactory;
+use TheCodingMachine\GraphQLite\Types\AnyScalar\AnyScalarType;
+use TheCodingMachine\GraphQLite\Types\AnyScalar\AnyScalarTypeMapper;
 
 class IntegrationTest extends TestCase
 {
@@ -25,6 +28,10 @@ class IntegrationTest extends TestCase
         $schemaFactory->addControllerNamespace('TheCodingMachine\GraphQLite\Types\Fixtures');
         $schemaFactory->addTypeNamespace('TheCodingMachine\GraphQLite\Types\Fixtures');
 
+
+        $schemaFactory->addRootTypeMapper(new AnyScalarTypeMapper());
+
+
         $this->schema = $schemaFactory->createSchema();
     }
 
@@ -32,6 +39,7 @@ class IntegrationTest extends TestCase
     {
         $this->schema->assertValid();
 
+        // Test string
         $queryString = '
         query {
             echoScalar(scalar:"foo")
@@ -43,10 +51,56 @@ class IntegrationTest extends TestCase
             $queryString
         );
 
-        var_dump($result);
-
         $this->assertSame([
             'echoScalar' => 'foo'
+        ], $result->toArray(Debug::RETHROW_INTERNAL_EXCEPTIONS)['data']);
+
+        // Test int
+        $queryString = '
+        query {
+            echoScalar(scalar:42)
+        }
+        ';
+
+        $result = GraphQL::executeQuery(
+            $this->schema,
+            $queryString
+        );
+
+        $this->assertSame([
+            'echoScalar' => 42
+        ], $result->toArray(Debug::RETHROW_INTERNAL_EXCEPTIONS)['data']);
+
+        // Test float
+        $queryString = '
+        query {
+            echoScalar(scalar:42.42)
+        }
+        ';
+
+        $result = GraphQL::executeQuery(
+            $this->schema,
+            $queryString
+        );
+
+        $this->assertSame([
+            'echoScalar' => 42.42
+        ], $result->toArray(Debug::RETHROW_INTERNAL_EXCEPTIONS)['data']);
+
+        // Test bool
+        $queryString = '
+        query {
+            echoScalar(scalar:true)
+        }
+        ';
+
+        $result = GraphQL::executeQuery(
+            $this->schema,
+            $queryString
+        );
+
+        $this->assertSame([
+            'echoScalar' => true
         ], $result->toArray(Debug::RETHROW_INTERNAL_EXCEPTIONS)['data']);
 
     }
