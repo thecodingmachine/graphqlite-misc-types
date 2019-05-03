@@ -16,14 +16,7 @@ use GraphQL\Utils\Utils;
 
 final class AnyScalarType extends ScalarType
 {
-    const NAME = 'AnyScalar';
-
-    const SCALAR_NODES = [
-        StringValueNode::class,
-        BooleanValueNode::class,
-        IntValueNode::class,
-        FloatValueNode::class
-    ];
+    public const NAME = 'AnyScalar';
 
     /**
      * @var self
@@ -86,17 +79,16 @@ final class AnyScalarType extends ScalarType
      */
     public function parseLiteral($valueNode, ?array $variables = null)
     {
-        $isScalar = false;
-        foreach (self::SCALAR_NODES as $nodeClass) {
-            if ($valueNode instanceof $nodeClass) {
-                $isScalar = true;
-                break;
-            }
+        if ($valueNode instanceof StringValueNode || $valueNode instanceof BooleanValueNode) {
+            return $valueNode->value;
+        }
+        if ($valueNode instanceof IntValueNode) {
+            return (int) $valueNode->value;
+        }
+        if ($valueNode instanceof FloatValueNode) {
+            return (float) $valueNode->value;
         }
 
-        if (!$isScalar) {
-            throw new Error('Not a valid scalar', $valueNode);
-        }
-        return $valueNode->value;
+        throw new Error('Not a valid scalar', $valueNode);
     }
 }
