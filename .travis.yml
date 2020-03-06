@@ -4,7 +4,7 @@ cache:
     - $HOME/.composer/cache
 jobs:
   include:
-    - php: 7.3
+    - php: 7.4
       env: PREFER_LOWEST=""
       before_script:
         - &composerupdate
@@ -15,13 +15,13 @@ jobs:
         - composer phpstan
       after_script:
         - ./vendor/bin/php-coveralls -v
-    - php: 7.2
+    - php: 7.3
       env: PREFER_LOWEST=""
       before_script:
         - *composerupdate
       script:
         - *phpunit
-    - php: 7.1
+    - php: 7.2
       env: PREFER_LOWEST=""
       before_script:
         - *composerupdate
