@@ -14,6 +14,7 @@ use TheCodingMachine\GraphQLite\Schema;
 use TheCodingMachine\GraphQLite\SchemaFactory;
 use TheCodingMachine\GraphQLite\Types\AnyScalar\AnyScalarType;
 use TheCodingMachine\GraphQLite\Types\AnyScalar\AnyScalarTypeMapper;
+use TheCodingMachine\GraphQLite\Types\AnyScalar\AnyScalarTypeMapperFactory;
 
 class IntegrationTest extends TestCase
 {
@@ -29,7 +30,7 @@ class IntegrationTest extends TestCase
         $schemaFactory->addTypeNamespace('TheCodingMachine\GraphQLite\Types\Fixtures');
 
 
-        $schemaFactory->addRootTypeMapper(new AnyScalarTypeMapper());
+        $schemaFactory->addRootTypeMapperFactory(new AnyScalarTypeMapperFactory());
 
 
         $this->schema = $schemaFactory->createSchema();

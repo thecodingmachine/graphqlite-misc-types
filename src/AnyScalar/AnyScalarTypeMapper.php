@@ -15,23 +15,30 @@ use TheCodingMachine\GraphQLite\Mappers\Root\RootTypeMapperInterface;
 
 class AnyScalarTypeMapper implements RootTypeMapperInterface
 {
+    /** @var RootTypeMapperInterface */
+    private $next;
 
-    public function toGraphQLOutputType(Type $type, ?OutputType $subType, ReflectionMethod $refMethod, DocBlock $docBlockObj): ?OutputType
+    public function __construct(RootTypeMapperInterface $next)
     {
-        if ($type instanceof Scalar) {
-            // AnyScalarType is a class implementing the Webonyx ScalarType type.
-            return AnyScalarType::getInstance();
-        }
-        return null;
+        $this->next = $next;
     }
 
-    public function toGraphQLInputType(Type $type, ?InputType $subType, string $argumentName, ReflectionMethod $refMethod, DocBlock $docBlockObj): ?InputType
+    public function toGraphQLOutputType(Type $type, ?OutputType $subType, ReflectionMethod $refMethod, DocBlock $docBlockObj): OutputType
     {
         if ($type instanceof Scalar) {
             // AnyScalarType is a class implementing the Webonyx ScalarType type.
             return AnyScalarType::getInstance();
         }
-        return null;
+        return $this->next->toGraphQLOutputType($type, $subType, $refMethod, $docBlockObj);
+    }
+
+    public function toGraphQLInputType(Type $type, ?InputType $subType, string $argumentName, ReflectionMethod $refMethod, DocBlock $docBlockObj): InputType
+    {
+        if ($type instanceof Scalar) {
+            // AnyScalarType is a class implementing the Webonyx ScalarType type.
+            return AnyScalarType::getInstance();
+        }
+        return $this->next->toGraphQLInputType($type, $subType, $argumentName, $refMethod, $docBlockObj);
     }
 
     /**
@@ -40,13 +47,13 @@ class AnyScalarTypeMapper implements RootTypeMapperInterface
      * also map these types by name in the "mapNameToType" method.
      *
      * @param string $typeName The name of the GraphQL type
-     * @return NamedType|null
+     * @return NamedType
      */
-    public function mapNameToType(string $typeName): ?NamedType
+    public function mapNameToType(string $typeName): NamedType
     {
         if ($typeName === AnyScalarType::NAME) {
             return AnyScalarType::getInstance();
         }
-        return null;
+        return $this->next->mapNameToType($typeName);
     }
 }
