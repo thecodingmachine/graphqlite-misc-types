@@ -23,7 +23,7 @@ class IntegrationTest extends TestCase
      */
     private $schema;
 
-    public function setUp()
+    public function setUp(): void
     {
         $schemaFactory = new SchemaFactory(new ArrayCache(), new BasicAutoWiringContainer(new EmptyContainer()));
         $schemaFactory->addControllerNamespace('TheCodingMachine\GraphQLite\Types\Fixtures');
@@ -36,7 +36,7 @@ class IntegrationTest extends TestCase
         $this->schema = $schemaFactory->createSchema();
     }
 
-    public function testEndToEnd()
+    public function testEndToEnd(): void
     {
         $this->schema->assertValid();
 
