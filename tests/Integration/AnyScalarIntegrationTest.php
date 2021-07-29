@@ -9,14 +9,12 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Simple\ArrayCache;
 use TheCodingMachine\GraphQLite\Containers\BasicAutoWiringContainer;
 use TheCodingMachine\GraphQLite\Containers\EmptyContainer;
-use TheCodingMachine\GraphQLite\Mappers\StaticTypeMapper;
 use TheCodingMachine\GraphQLite\Schema;
 use TheCodingMachine\GraphQLite\SchemaFactory;
-use TheCodingMachine\GraphQLite\Types\AnyScalar\AnyScalarType;
-use TheCodingMachine\GraphQLite\Types\AnyScalar\AnyScalarTypeMapper;
 use TheCodingMachine\GraphQLite\Types\AnyScalar\AnyScalarTypeMapperFactory;
+use TheCodingMachine\GraphQLite\Types\JSONScalar\JSONScalarTypeMapperFactory;
 
-class IntegrationTest extends TestCase
+class AnyScalarIntegrationTest extends TestCase
 {
     /**
      * @var Schema
@@ -31,7 +29,7 @@ class IntegrationTest extends TestCase
 
 
         $schemaFactory->addRootTypeMapperFactory(new AnyScalarTypeMapperFactory());
-
+        $schemaFactory->addRootTypeMapperFactory(new JSONScalarTypeMapperFactory());
 
         $this->schema = $schemaFactory->createSchema();
     }

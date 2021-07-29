@@ -20,6 +20,16 @@ class SomeTestController
 
     /**
      * @Query()
+     * @param JSON $JSON
+     * @return JSON
+     */
+    public function echoJSON($JSON)
+    {
+        return $JSON;
+    }
+
+    /**
+     * @Query()
      */
     public function testIgnore(string $foo): string
     {
