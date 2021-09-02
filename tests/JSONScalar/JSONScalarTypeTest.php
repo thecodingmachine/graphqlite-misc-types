@@ -17,7 +17,7 @@ class JSONScalarTypeTest extends TestCase
     public function testMapNameToType()
     {
         $typeMapper = new class implements RootTypeMapperInterface {
-            public function toGraphQLOutputType(Type $type, ?OutputType $subType, ReflectionMethod $refMethod, DocBlock $docBlockObj): OutputType
+            public function toGraphQLOutputType(Type $type, ?OutputType $subType, $reflector, DocBlock $docBlockObj): OutputType
             {
                 throw new RuntimeException('Not implemented');
             }
@@ -25,7 +25,7 @@ class JSONScalarTypeTest extends TestCase
             /**
              * @inheritDoc
              */
-            public function toGraphQLInputType(Type $type, ?InputType $subType, string $argumentName, ReflectionMethod $refMethod, DocBlock $docBlockObj): InputType
+            public function toGraphQLInputType(Type $type, ?InputType $subType, string $argumentName, $reflector, DocBlock $docBlockObj): InputType
             {
                 throw new RuntimeException('Not implemented');
             }

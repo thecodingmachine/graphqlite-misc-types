@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TheCodingMachine\GraphQLite\Types\AnyScalar;
-
 
 use Exception;
 use GraphQL\Error\Error;

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TheCodingMachine\GraphQLite\Types\AnyScalar;
-
 
 use GraphQL\Type\Definition\InputType;
 use GraphQL\Type\Definition\NamedType;
@@ -10,7 +8,6 @@ use GraphQL\Type\Definition\OutputType;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Scalar;
-use ReflectionMethod;
 use TheCodingMachine\GraphQLite\Mappers\Root\RootTypeMapperInterface;
 
 class AnyScalarTypeMapper implements RootTypeMapperInterface
@@ -23,22 +20,22 @@ class AnyScalarTypeMapper implements RootTypeMapperInterface
         $this->next = $next;
     }
 
-    public function toGraphQLOutputType(Type $type, ?OutputType $subType, ReflectionMethod $refMethod, DocBlock $docBlockObj): OutputType
+    public function toGraphQLOutputType(Type $type, ?OutputType $subType, $reflector, DocBlock $docBlockObj): OutputType
     {
         if ($type instanceof Scalar) {
             // AnyScalarType is a class implementing the Webonyx ScalarType type.
             return AnyScalarType::getInstance();
         }
-        return $this->next->toGraphQLOutputType($type, $subType, $refMethod, $docBlockObj);
+        return $this->next->toGraphQLOutputType($type, $subType, $reflector, $docBlockObj);
     }
 
-    public function toGraphQLInputType(Type $type, ?InputType $subType, string $argumentName, ReflectionMethod $refMethod, DocBlock $docBlockObj): InputType
+    public function toGraphQLInputType(Type $type, ?InputType $subType, string $argumentName, $reflector, DocBlock $docBlockObj): InputType
     {
         if ($type instanceof Scalar) {
             // AnyScalarType is a class implementing the Webonyx ScalarType type.
             return AnyScalarType::getInstance();
         }
-        return $this->next->toGraphQLInputType($type, $subType, $argumentName, $refMethod, $docBlockObj);
+        return $this->next->toGraphQLInputType($type, $subType, $argumentName, $reflector, $docBlockObj);
     }
 
     /**

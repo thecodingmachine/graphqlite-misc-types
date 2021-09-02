@@ -8,6 +8,7 @@ use GraphQL\Type\Definition\OutputType;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Type;
 use ReflectionMethod;
+use ReflectionProperty;
 use TheCodingMachine\GraphQLite\Mappers\Root\RootTypeMapperInterface;
 
 class JSONScalarTypeMapper implements RootTypeMapperInterface
@@ -23,26 +24,26 @@ class JSONScalarTypeMapper implements RootTypeMapperInterface
     public function toGraphQLOutputType(
         Type $type,
         ?OutputType $subType,
-        ReflectionMethod $refMethod,
+        $reflector,
         DocBlock $docBlockObj
     ): OutputType {
         if ($this->matchReturnType($docBlockObj)) {
             return JSONScalarType::getInstance();
         }
-        return  $this->next->toGraphQLOutputType($type, $subType, $refMethod, $docBlockObj);
+        return  $this->next->toGraphQLOutputType($type, $subType, $reflector, $docBlockObj);
     }
 
     public function toGraphQLInputType(
         Type $type,
         ?InputType $subType,
         string $argumentName,
-        ReflectionMethod $refMethod,
+        $reflector,
         DocBlock $docBlockObj
     ): InputType {
-        if ($this->matchInputType($argumentName, $refMethod, $docBlockObj)) {
+        if ($this->matchInputType($argumentName, $reflector, $docBlockObj)) {
             return JSONScalarType::getInstance();
         }
-        return $this->next->toGraphQLInputType($type, $subType, $argumentName, $refMethod, $docBlockObj);
+        return $this->next->toGraphQLInputType($type, $subType, $argumentName, $reflector, $docBlockObj);
     }
 
     /**
@@ -71,18 +72,20 @@ class JSONScalarTypeMapper implements RootTypeMapperInterface
 
     /**
      * @param string $argumentName
-     * @param ReflectionMethod $refMethod
+     * @param ReflectionMethod|ReflectionProperty $reflector
      * @param DocBlock $docBlockObj
      * @return bool
      */
-    private function matchInputType(string $argumentName, ReflectionMethod $refMethod, DocBlock $docBlockObj): bool
+    private function matchInputType(string $argumentName, $reflector, DocBlock $docBlockObj): bool
     {
         $params = $docBlockObj->getTagsByName('param');
         for ($i = 0; $i < count($params); $i++) {
             $paramText = $params[$i]->__toString();
-            $refParams = $refMethod->getParameters();
-            if (strpos($paramText, JSONScalarType::NAME) > 0 && $refParams[$i]->getName() === $argumentName) {
-                return true;
+            if ($reflector instanceof ReflectionMethod) {
+                $refParams = $reflector->getParameters();
+                if (strpos($paramText, JSONScalarType::NAME) > 0 && $refParams[$i]->getName() === $argumentName) {
+                    return true;
+                }
             }
         }
         return false;
