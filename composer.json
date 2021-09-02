@@ -16,7 +16,7 @@
   }
   ],
   "require" : {
-    "php" : ">=7.1",
+    "php" : ">=7.2",
     "thecodingmachine/graphqlite" : "~4.3.0",
     "webonyx/graphql-php": "^0.13.1"
   },
