@@ -1,6 +1,6 @@
 <?php
 
-namespace TheCodingMachine\GraphQLite\Types\AnyScalar;
+namespace TheCodingMachine\GraphQLite\Types\JSONScalar;
 
 use GraphQL\Type\Definition\InputType;
 use GraphQL\Type\Definition\NamedType;
@@ -8,10 +8,11 @@ use GraphQL\Type\Definition\OutputType;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\Type;
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use RuntimeException;
 use TheCodingMachine\GraphQLite\Mappers\Root\RootTypeMapperInterface;
 
-class AnyScalarTypeTest extends TestCase
+class JSONScalarTypeTest extends TestCase
 {
     public function testMapNameToType()
     {
@@ -38,7 +39,7 @@ class AnyScalarTypeTest extends TestCase
             }
         };
 
-        $mapper = new AnyScalarTypeMapper($typeMapper);
+        $mapper = new JSONScalarTypeMapper($typeMapper);
 
         $this->expectExceptionMessage('Not found');
         $mapper->mapNameToType('foo');
